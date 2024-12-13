@@ -53,11 +53,11 @@ class User extends Authenticatable
 
     public function grad()
     {
-        $this->belongsTo(Grad::class, 'gradId');
+        return $this->belongsTo(Grad::class, 'gradId');
     }
 
     public function pretplata()
     {
-        $this->hasMany(Pretplata::class, 'userId');
+        return $this->hasMany(Pretplata::class, 'userId');
     }
 }
