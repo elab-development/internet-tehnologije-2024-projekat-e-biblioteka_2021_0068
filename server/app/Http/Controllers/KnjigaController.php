@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Resources\KnjigaResurs;
 use App\Models\Knjiga;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class KnjigaController extends OdgovorController
@@ -76,6 +77,18 @@ class KnjigaController extends OdgovorController
         $knjiga->delete();
 
         return $this->uspesanOdgovor([], 'Knjiga uspesno obrisana');
+    }
 
+    public function paginacija(Request $request)
+    {
+        $perPage = $request->perPage ?? 10;
+
+        $knjige = DB::table('knjige')
+            ->join('zanrovi', 'knjige.zanrId', '=', 'zanrovi.id')
+            ->select('knjige.*', 'zanrovi.nazivZanra')
+            ->orderBy('knjige.id', 'asc')
+            ->paginate($perPage);
+
+        return $this->uspesanOdgovor($knjige, 'Knjige paginacija');
     }
 }
