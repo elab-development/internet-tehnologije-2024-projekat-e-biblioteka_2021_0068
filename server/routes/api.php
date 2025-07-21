@@ -16,13 +16,15 @@ Route::get('/zanrovi', [ZanrController::class, 'index']);
 Route::get('/paginacija', [\App\Http\Controllers\KnjigaController::class, 'paginacija']);
 Route::get('/donatori', [\App\Http\Controllers\UserController::class, 'donatoriBiblioteke']);
 
-Route::resource('/knjige', \App\Http\Controllers\KnjigaController::class)->only(['index', 'show']);
+//Route::resource('/knjige', \App\Http\Controllers\KnjigaController::class)->only(['index', 'show']);
 
 Route::group(['middleware' => ['auth:sanctum']], function () {
 
     Route::get('/pretplate-na-dan', [\App\Http\Controllers\PretplataController::class, 'aktivnePretplateNadanasnjiDan']);
     Route::get('/pretplate-korisnika-na-dan/{userId}', [\App\Http\Controllers\PretplataController::class, 'aktivnePretplateZaKorisnika']);
     Route::get('/pretplate', [\App\Http\Controllers\PretplataController::class, 'index']);
+
+    Route::resource('/knjige', \App\Http\Controllers\KnjigaController::class)->only(['index', 'show']);
 
     Route::post('/pretplata', [\App\Http\Controllers\PretplataController::class, 'pretplatiSe']);
 
