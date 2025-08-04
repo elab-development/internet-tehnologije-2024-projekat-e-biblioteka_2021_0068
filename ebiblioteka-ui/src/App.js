@@ -9,23 +9,33 @@ import Onama from "./stranice/Onama";
 import MojeKnjige from "./stranice/MojeKnjige";
 import Admin from "./stranice/Admin";
 import Login from "./stranice/Login";
+import {Container} from "react-bootstrap";
+import Footer from "./komponente/Footer";
 
 function App() {
   return (
     <>
       <Meni />
+        <div className="background" >
+            <Container>
+                <div className="main">
+                    <BrowserRouter>
+                        <Routes>
+                            <Route path="/" element={<Pocetna />} />
+                            <Route path="/knjige" element={<Knjige />} />
+                            <Route path="/onama" element={<Onama />} />
+                            <Route path="/moje-knjige" element={<MojeKnjige />} />
+                            <Route path="/admin" element={<Admin />} />
+                            <Route path="/login" element={<Login />} />
 
-        <BrowserRouter>
-            <Routes>
-                <Route path="/" element={<Pocetna />} />
-                <Route path="/knjige" element={<Knjige />} />
-                <Route path="/onama" element={<Onama />} />
-                <Route path="/moje-knjige" element={<MojeKnjige />} />
-                <Route path="/admin" element={<Admin />} />
-                <Route path="/login" element={<Login />} />
+                        </Routes>
+                    </BrowserRouter>
+                </div>
+            </Container>
+        </div>
 
-            </Routes>
-        </BrowserRouter>
+        <Footer />
+
     </>
   );
 }
