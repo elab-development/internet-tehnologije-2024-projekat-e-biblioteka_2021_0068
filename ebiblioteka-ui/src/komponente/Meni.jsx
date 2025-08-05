@@ -9,6 +9,11 @@ const Meni = () => {
     const token = window.sessionStorage.getItem('token');
     const uloga = user ? user.uloga : null;
     const imaPristupAdministraciji = uloga === 'admin' || uloga === 'bibliotekar';
+    const logout = () => {
+        window.sessionStorage.removeItem('token');
+        window.sessionStorage.removeItem('user');
+        window.location.href = "/";
+    }
 
     return (
         <>
@@ -28,7 +33,7 @@ const Meni = () => {
                                         <Nav.Link href="/admin"><FaSign/> Admin</Nav.Link>
                                     )
                                 }
-                            <Nav.Link href="/logout"><FaWaveSquare/> Logout</Nav.Link>
+                            <Nav.Link onClick={logout} href="#"><FaWaveSquare/> Logout</Nav.Link>
                             </>
                         )}
 
