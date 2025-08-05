@@ -73,3 +73,15 @@ body {
     font-size: 24px;
     margin-top: 10px;
 }
+
+.kartica-linkovi {
+    font-size: 24px;
+}
+
+.kartica-linkovi a{
+    color: #5567b8;
+}
+
+.kartica-linkovi a:hover{
+    color: #e1306c;
+}
