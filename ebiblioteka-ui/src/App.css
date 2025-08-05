@@ -85,3 +85,8 @@ body {
 .kartica-linkovi a:hover{
     color: #e1306c;
 }
+
+.dugme {
+    background-color: #5567b8 !important;
+    color: #fff !important;
+}
