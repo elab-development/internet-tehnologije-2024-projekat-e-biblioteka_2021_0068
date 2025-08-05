@@ -1,13 +1,13 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Oswald:wght@200..700&display=swap');
 
 body {
-    font-family: "Oswald", sans-serif;
+    font-family: "Oswald", sans-serif !important;
     font-optical-sizing: auto;
     font-weight: bold;
     font-style: normal;
     margin: 0;
     padding: 0;
-    color: #5567b8;
+    color: #5567b8 !important;
 }
 
 .meni-bg {
