@@ -131,7 +131,7 @@ const Knjige = () => {
                     }
 
                     {
-                        imaPretplatu && (
+                        imaPretplatu && ucitanaKnjiga &&(
                             <div className="alert alert-success">
                                 <a href={ucitanaKnjiga.urlKnjige} target="_blank" rel="noopener noreferrer"> <FaDownload/> Mozete downloadovati vasu knjigu</a>
                             </div>
