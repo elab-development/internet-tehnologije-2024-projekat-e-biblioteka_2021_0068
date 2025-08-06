@@ -41,10 +41,16 @@ const Knjige = () => {
     }, []);
 
     useEffect(() => {
-        if (user) {
+        if (user !== null && user.id) {
             server.get('/omiljene-knjige/' + user.id).then(response => {
                 console.log(response);
-                setOmiljeneKnjige(response.data.podaci);
+                console.log('Omiljene knjige:', response.data.podaci);
+                const podaci = response.data.podaci;
+                if (podaci && podaci.length > 0) {
+                    setOmiljeneKnjige(podaci.map(k => k.knjiga));
+                } else {
+                    setOmiljeneKnjige([]);
+                }
             }).catch(error => {
                 console.log(error);
             })
@@ -103,7 +109,9 @@ const Knjige = () => {
                                     <td>{knjiga.uvidKnjige}</td>
                                     <td><button onClick={() => {
                                         setUcitanaKnjiga(knjiga);
-                                        //setUcitanaKnjigeJeOmiljena(jeOmiljena);
+                                        if (omiljeneKnjige != null && omiljeneKnjige.length > 0){
+                                            setUcitanaKnjigeJeOmiljena(omiljeneKnjige.some(k => k.id === knjiga.id));
+                                        }
                                     }} className="btn dugme"><FaSpinner/>Ucitaj </button> </td>
                                 </tr>
                             ))}
@@ -137,7 +145,7 @@ const Knjige = () => {
                     }
 
                     {
-                        ucitanaKnjigeJeOmiljena && (
+                        ucitanaKnjigeJeOmiljena && ucitanaKnjiga && (
                             <div className="m-3">
                                 Ova knjiga je već u vašim omiljenim knjigama. <FaStar />
                             </div>
@@ -145,7 +153,7 @@ const Knjige = () => {
                     }
 
                     {
-                        !ucitanaKnjigeJeOmiljena && (
+                        !ucitanaKnjigeJeOmiljena && ucitanaKnjiga && (
                             <div className="m-3">
                                 Dodajte ovu knjigu u omiljene knjige klikom na <button className="btn dugme" onClick={() => {
 
@@ -164,7 +172,7 @@ const Knjige = () => {
                                         alert('Morate biti ulogovani da biste dodali knjigu u omiljene.');
                                     }
 
-                            }} > <FaStarHalf/> </button>
+                            }} > <FaStar/> </button>
                             </div>
                         )
                     }
