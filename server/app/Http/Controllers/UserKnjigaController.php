@@ -9,7 +9,7 @@ class UserKnjigaController extends OdgovorController
 {
     public function pretraziPoKorisniku(Request $request, $userId): \Illuminate\Http\JsonResponse
     {
-        $knjige = \App\Models\UserKnjiga::where('user_id', $userId)->get();
+        $knjige = \App\Models\UserKnjiga::where('userId', $userId)->get();
 
         return $this->uspesanOdgovor(UserKnjigaResurs::collection($knjige), 'Omiljene knjige korisnika');
     }
@@ -18,16 +18,16 @@ class UserKnjigaController extends OdgovorController
     {
 
         $validator = \Illuminate\Support\Facades\Validator::make($request->all(), [
-            'user_id' => 'required|exists:users,id',
-            'knjiga_id' => 'required|exists:knjige,id',
+            'userId' => 'required|exists:users,id',
+            'knjigaId' => 'required|exists:knjige,id',
         ]);
         if ($validator->fails()) {
             return $this->neuspesanOdgovor('Validacija nije uspela', $validator->errors());
         }
         $userKnjiga = \App\Models\UserKnjiga::create(
             [
-                'user_id' => $request->user_id,
-                'knjiga_id' => $request->knjiga_id,
+                'userId' => $request->userId,
+                'knjigaIdd' => $request->knjigaId,
                 'vreme' => now(),
             ]
         );

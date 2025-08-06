@@ -2,7 +2,7 @@ import React, {useEffect} from 'react';
 import Naslov from "../komponente/Naslov";
 import {Col, Row, Table} from "react-bootstrap";
 import server from "../logika/server";
-import {FaDownload, FaSpinner} from "react-icons/fa";
+import {FaDownload, FaSpinner, FaStar, FaStarHalf} from "react-icons/fa";
 
 const Knjige = () => {
 
@@ -14,6 +14,8 @@ const Knjige = () => {
 
     const [imaPretplatu, setImaPretplatu] = React.useState(false);
     const [pretplate, setPretplate] = React.useState([]);
+    const [omiljeneKnjige, setOmiljeneKnjige] = React.useState([]);
+    const [ucitanaKnjigeJeOmiljena, setUcitanaKnjigeJeOmiljena] = React.useState(false);
 
     const user = JSON.parse(window.sessionStorage.getItem('user'));
 
@@ -36,7 +38,18 @@ const Knjige = () => {
         } else {
             setImaPretplatu(false);
         }
-    }, [user]);
+    }, []);
+
+    useEffect(() => {
+        if (user) {
+            server.get('/omiljene-knjige/' + user.id).then(response => {
+                console.log(response);
+                setOmiljeneKnjige(response.data.podaci);
+            }).catch(error => {
+                console.log(error);
+            })
+        }
+    }, []);
 
     useEffect(() => {
         server.get(link).then(response => {
@@ -90,6 +103,7 @@ const Knjige = () => {
                                     <td>{knjiga.uvidKnjige}</td>
                                     <td><button onClick={() => {
                                         setUcitanaKnjiga(knjiga);
+                                        //setUcitanaKnjigeJeOmiljena(jeOmiljena);
                                     }} className="btn dugme"><FaSpinner/>Ucitaj </button> </td>
                                 </tr>
                             ))}
@@ -123,6 +137,39 @@ const Knjige = () => {
                     }
 
                     {
+                        ucitanaKnjigeJeOmiljena && (
+                            <div className="m-3">
+                                Ova knjiga je već u vašim omiljenim knjigama. <FaStar />
+                            </div>
+                        )
+                    }
+
+                    {
+                        !ucitanaKnjigeJeOmiljena && (
+                            <div className="m-3">
+                                Dodajte ovu knjigu u omiljene knjige klikom na <button className="btn dugme" onClick={() => {
+
+                                    if (user) {
+                                        server.post('/omiljene-knjige', {
+                                            knjigaId: ucitanaKnjiga.id,
+                                            userId: user.id
+                                        }).then(response => {
+                                            console.log(response);
+                                            setOmiljeneKnjige([...omiljeneKnjige, ucitanaKnjiga]);
+                                            setUcitanaKnjigeJeOmiljena(true);
+                                        }).catch(error => {
+                                            console.log(error);
+                                        });
+                                    } else {
+                                        alert('Morate biti ulogovani da biste dodali knjigu u omiljene.');
+                                    }
+
+                            }} > <FaStarHalf/> </button>
+                            </div>
+                        )
+                    }
+
+                    {
                         !imaPretplatu && (
                             <div className="alert alert-warning">
                                 Morate biti ulogovani sa aktivnom pretplatom da biste mogli da preuzimate knjige.
@@ -131,7 +178,7 @@ const Knjige = () => {
                     }
 
                     {
-                        imaPretplatu && ucitanaKnjiga &&(
+                        imaPretplatu && ucitanaKnjiga && (
                             <div className="alert alert-success">
                                 <a href={ucitanaKnjiga.urlKnjige} target="_blank" rel="noopener noreferrer"> <FaDownload/> Mozete downloadovati vasu knjigu</a>
                             </div>
