@@ -27,7 +27,7 @@ class UserKnjigaController extends OdgovorController
         $userKnjiga = \App\Models\UserKnjiga::create(
             [
                 'userId' => $request->userId,
-                'knjigaIdd' => $request->knjigaId,
+                'knjigaId' => $request->knjigaId,
                 'vreme' => now(),
             ]
         );
