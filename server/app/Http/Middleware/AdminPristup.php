@@ -14,8 +14,10 @@ class AdminPristup
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
-    public function handle(Request $request, Closure $next): Response
+    public function handle(Request $request, Closure $next, ...$values): Response
     {
+
+        $roles = $values;
 
         $userId = auth()->user()->id;
 
@@ -25,10 +27,10 @@ class AdminPristup
             return response()->json(['message' => 'Ne postoji korisnik'], 403);
         }
 
-        if ($user->uloga !== 'admin') {
-            return response()->json(['message' => 'Nemate pristup'], 403);
+        if (in_array($user->uloga, $roles)) {
+            return $next($request);
         }
 
-        return $next($request);
+        return response()->json(['message' => 'Nemate pristup'], 403);
     }
 }
