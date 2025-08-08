@@ -33,7 +33,7 @@ class KnjigaController extends OdgovorController
         $validator = Validator::make($request->all(), [
             'nazivKnjige' => 'required',
             'autor' => 'required',
-            'zanrId' => 'required',
+            'zanrId' => 'required|numeric',
             'knjiga' => 'file',
             'uvidKnjige' => 'required'
         ]);
