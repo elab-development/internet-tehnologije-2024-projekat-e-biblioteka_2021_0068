@@ -1,7 +1,7 @@
 import React from 'react';
 import {Container, Nav, Navbar} from "react-bootstrap";
 import {FaHouse} from "react-icons/fa6";
-import {FaBomb, FaBook, FaSign, FaSignInAlt, FaUser, FaWaveSquare} from "react-icons/fa";
+import {FaBook, FaMoneyBill, FaQuestion, FaSign, FaSignInAlt, FaUser, FaWaveSquare} from "react-icons/fa";
 
 const Meni = () => {
 
@@ -22,8 +22,9 @@ const Meni = () => {
                     <Navbar.Brand href="/">Ebiblioteka</Navbar.Brand>
                     <Nav className="me-auto">
                         <Nav.Link href="/"><FaHouse/> Pocetna</Nav.Link>
+                        <Nav.Link href="/donatori"><FaMoneyBill/> Donatori</Nav.Link>
                         <Nav.Link href="/knjige"><FaBook/> Knjige</Nav.Link>
-                        <Nav.Link href="/onama"><FaBomb/> O nama</Nav.Link>
+                        <Nav.Link href="/onama"><FaQuestion/> O nama</Nav.Link>
 
                         { token && (
                             <>

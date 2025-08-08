@@ -11,6 +11,7 @@ import Admin from "./stranice/Admin";
 import Login from "./stranice/Login";
 import {Container} from "react-bootstrap";
 import Footer from "./komponente/Footer";
+import Donatori from "./stranice/Donatori";
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
                     <BrowserRouter>
                         <Routes>
                             <Route path="/" element={<Pocetna />} />
+                            <Route path="/donatori" element={<Donatori />} />
                             <Route path="/knjige" element={<Knjige />} />
                             <Route path="/onama" element={<Onama />} />
                             <Route path="/moje-knjige" element={<MojeKnjige />} />
