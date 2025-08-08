@@ -24,6 +24,9 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get('/pretplate-korisnika-na-dan/{userId}', [\App\Http\Controllers\PretplataController::class, 'aktivnePretplateZaKorisnika']);
     Route::get('/pretplate', [\App\Http\Controllers\PretplataController::class, 'index'])->middleware('role:admin');
 
+    Route::get('/knjige/zanr/{zanrId}', [\App\Http\Controllers\KnjigaController::class, 'pretraziPoZanru'])->middleware('role:admin');
+    Route::get('/knjige-po-zanru', [\App\Http\Controllers\KnjigaController::class, 'vratiKnjigeGrupisanePoZanru'])->middleware('role:admin');
+
     Route::get('/omiljene-knjige/{userId}', [\App\Http\Controllers\UserKnjigaController::class, 'pretraziPoKorisniku']);
     Route::post('/omiljene-knjige', [\App\Http\Controllers\UserKnjigaController::class, 'store']);
     Route::delete('/omiljene-knjige/{id}', [\App\Http\Controllers\UserKnjigaController::class, 'destroy']);

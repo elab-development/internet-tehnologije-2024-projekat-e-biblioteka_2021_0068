@@ -3,6 +3,9 @@ import Naslov from "../komponente/Naslov";
 import {Button, Col, Form, Row, Table} from "react-bootstrap";
 import server from "../logika/server";
 import useForm from "../logika/useForm";
+import {FaTrash} from "react-icons/fa";
+import {FaTrashCan} from "react-icons/fa6";
+import {Chart} from "react-google-charts";
 
 const Admin = () => {
     const [poruka, setPoruka] = React.useState("");
@@ -17,6 +20,12 @@ const Admin = () => {
     const [pretplate, setPretplate] = React.useState([]);
 
     const [zanrovi, setZanrovi] = React.useState([]);
+
+    const [izabraniZanrId, setIzabraniZanrId] = React.useState(0);
+
+    const [filtriraneKnjige, setFiltriraneKnjige] = React.useState([]);
+
+    const [podaciGrafikona, setPodaciGrafikona] = React.useState([]);
 
     const {values, handleChange} = useForm({
         nazivKnjige: "",
@@ -74,6 +83,44 @@ const Admin = () => {
         });
     }
 
+    useEffect(() => {
+        if (izabraniZanrId > 0) {
+            server.get('/knjige/zanr/' + izabraniZanrId).then(response => {
+                console.log(response);
+                setFiltriraneKnjige(response.data.podaci);
+            }).catch(error => {
+                console.log(error);
+            });
+        } else {
+            server.get('/knjige').then(response => {
+                console.log(response);
+                setFiltriraneKnjige(response.data.podaci);
+            }).catch(error => {
+                console.log(error);
+            });
+        }
+    }, [izabraniZanrId]);
+
+    useEffect(() => {
+        server.get('/knjige-po-zanru').then(response => {
+            console.log('grafikon')
+            console.log(response);
+            const podaci = response.data.podaci;
+            let grafikPodaci = [];
+            grafikPodaci.push(['Zanr', 'Broj knjiga']);
+
+            for (let i = 0; i < podaci.length; i++) {
+                grafikPodaci.push([podaci[i].nazivZanra, podaci[i].brojKnjiga]);
+            }
+
+            console.log(grafikPodaci);
+
+            setPodaciGrafikona(grafikPodaci);
+        }).catch(error => {
+            console.log(error);
+        });
+    }, []);
+
     return (
         <>
             <Naslov naslov="Administracija" podnaslov={poruka} />
@@ -128,9 +175,11 @@ const Admin = () => {
                             <Col md={8}>
                                 <Table hover>
                                     <thead>
-                                        <th>Korisnik</th>
-                                        <th>Datum od</th>
-                                        <th>Datum do</th>
+                                        <tr>
+                                            <th>Korisnik</th>
+                                            <th>Datum od</th>
+                                            <th>Datum do</th>
+                                        </tr>
                                     </thead>
                                     <tbody>
                                     {
@@ -149,22 +198,86 @@ const Admin = () => {
                     )
                 }
             </Row>
+            <hr/>
 
             <Row>
+
                 {
                     samoAdmin && (
                         <>
-                            <Col md={8}>
-                                Brisanje knjiga
+                            <Col md={12}>
+                                <h1 className="text-center p-1">Pregled broja knjiga po zanru</h1>
                             </Col>
+                            <Col md={12}>
 
-                            <Col md={4}>
-                                Unos pretplata
+                                {
+                                    podaciGrafikona.length > 0 && <Chart chartType="ColumnChart" width="100%" height="100%" data={podaciGrafikona} />
+                                }
+                            </Col>
+                            <Col md={12}>
+                                <Form.Group className="mb-3" controlId="formZanrPretraga">
+                                    <Form.Label column="lg">Pretraga knjiga po zanru</Form.Label>
+                                    <Form.Select onChange={
+                                        (event) => {
+                                            setIzabraniZanrId(event.target.value);
+                                    }
+                                    } name="zanrPretraga" size="lg">
+                                        <option key={0} value={0}>Svi zanrovi</option>
+
+                                        {
+                                            zanrovi.map((zanr) => {
+                                                return (
+                                                    <option key={zanr.id} value={zanr.id}>{zanr.nazivZanra}</option>
+                                                )
+                                            })
+                                        }
+                                    </Form.Select>
+                                </Form.Group>
+                                <hr/>
+                                <Table hover>
+                                    <thead>
+                                        <tr>
+                                            <th>Naslov</th>
+                                            <th>Autor</th>
+                                            <th>Žanr</th>
+                                            <th>Obrisi</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {
+                                            filtriraneKnjige.map((knjiga, index) => (
+                                                <tr key={index}>
+                                                    <td>{knjiga.nazivKnjige}</td>
+                                                    <td>{knjiga.autor}</td>
+                                                    <td>{knjiga.zanr.nazivZanra}</td>
+                                                    <td>
+                                                        <button
+                                                            className="btn dugme"
+                                                            onClick={() => {
+                                                                server.delete('/knjige/' + knjiga.id)
+                                                                    .then(response => {
+                                                                        console.log(response);
+                                                                        setFiltriraneKnjige(filtriraneKnjige.filter(k => k.id !== knjiga.id));
+                                                                    })
+                                                                    .catch(error => {
+                                                                        console.error("Greška prilikom brisanja knjige:", error);
+                                                                    });
+                                                            }}
+                                                        >
+                                                            <FaTrashCan/>
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            ))
+                                        }
+                                    </tbody>
+                                </Table>
                             </Col>
                         </>
                     )
                 }
             </Row>
+
         </>
     );
 };

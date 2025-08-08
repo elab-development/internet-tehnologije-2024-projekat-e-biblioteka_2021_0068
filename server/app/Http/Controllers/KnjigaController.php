@@ -91,4 +91,28 @@ class KnjigaController extends OdgovorController
 
         return $this->uspesanOdgovor($knjige, 'Knjige paginacija');
     }
+
+    public function pretraziPoZanru($zanrId): \Illuminate\Http\JsonResponse
+    {
+
+        $knjige = Knjiga::where('zanrId', $zanrId)->get();
+
+        if ($knjige->isEmpty()) {
+            return $this->neuspesanOdgovor('Nema knjiga za dati zanr');
+        }
+
+        return $this->uspesanOdgovor(KnjigaResurs::collection($knjige), 'Knjige pronadjene za zanr');
+    }
+
+    public function vratiKnjigeGrupisanePoZanru(Request $request): \Illuminate\Http\JsonResponse
+    {
+
+        $knjige = DB::table('knjige')
+            ->join('zanrovi', 'knjige.zanrId', '=', 'zanrovi.id')
+            ->select(Db::raw('count(*) as brojKnjiga'), 'zanrovi.nazivZanra')
+            ->groupBy('zanrovi.nazivZanra')
+            ->get();
+
+        return $this->uspesanOdgovor($knjige, 'Knjige pronadjene za zanr');
+    }
 }
