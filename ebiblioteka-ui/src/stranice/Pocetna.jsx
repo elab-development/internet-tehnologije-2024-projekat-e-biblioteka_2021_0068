@@ -1,9 +1,23 @@
 import React, {useEffect} from 'react';
 import Naslov from "../komponente/Naslov";
-import {Col, Image, Row} from "react-bootstrap";
+import {Card, Col, Image, Row} from "react-bootstrap";
 import magic from '../slike/magic.jpg';
+import server from "../logika/server";
+import {FaInstagram, FaLinkedin} from "react-icons/fa";
 
 const Pocetna = () => {
+
+    const [knjigaApi, setKnjigaApi] = React.useState([]);
+
+    useEffect(() => {
+        server.get('https://potterapi-fedeperin.vercel.app/en/books').then(response => {
+            console.log(response);
+            setKnjigaApi(response.data);
+        }).catch(error => {
+            console.log(error);
+            alert("Došlo je do greške prilikom učitavanja knjiga.");
+        });
+    }, []);
 
     return (
         <>
@@ -36,6 +50,26 @@ const Pocetna = () => {
                         <li>Pristup ekskluzivnim naslovima dostupnim samo pretplatnicima.</li>
                     </ul>
                 </Col>
+            </Row>
+
+            <hr/>
+            <Naslov naslov="Popularne knjige" podnaslov="Istražite naše najpopularnije naslove" />
+            <Row>
+                {
+                    knjigaApi.map(knjiga => (
+                        <Col md={4} key={knjiga.number} className="mb-4">
+                            <Card>
+                                <Card.Img variant="top" src={knjiga.cover} />
+                                <Card.Body>
+                                    <Card.Title>{knjiga.title}</Card.Title>
+                                    <Card.Text>
+                                        {knjiga.description}
+                                    </Card.Text>
+                                </Card.Body>
+                            </Card>
+                        </Col>
+                    ))
+                }
             </Row>
         </>
     );
