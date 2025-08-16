@@ -6,11 +6,7 @@ import {Col, Row} from "react-bootstrap";
 import Kartica from "../komponente/Kartica";
 
 const Onama = () => {
-    //slika : PropTypes.string,
-    //     ime: PropTypes.string,
-    //     opis: PropTypes.string,
-    //     instaLink: PropTypes.string,
-    //     lnLink: PropTypes.string
+    
     const onama = [
             {
                 slika: katarina,
